@@ -5,7 +5,6 @@ import { Order, OrderStatus } from '../order/entities/order.entity';
 import { v4 as uuidv4 } from 'uuid';
 import { FileLoggerService } from '../common/logger/file-logger.service';
 
-
 export interface CreateOrderData {
   film: string;
   session: string;
@@ -18,7 +17,11 @@ export interface CreateOrderData {
 }
 
 export interface IOrderRepository {
-  create(orderData: CreateOrderData, filmTitle: string, hall: number): Promise<Order>;
+  create(
+    orderData: CreateOrderData,
+    filmTitle: string,
+    hall: number,
+  ): Promise<Order>;
   findAll(): Promise<Order[]>;
   findById(orderId: string): Promise<Order | null>;
   findBySession(sessionId: string): Promise<Order[]>;
@@ -30,13 +33,15 @@ export interface IOrderRepository {
 export class OrderRepository implements IOrderRepository {
   private readonly nameService = OrderRepository.name;
   private readonly logger = new FileLoggerService(this.nameService);
-  constructor(
-    @InjectModel(Order.name) private orderModel: Model<Order>,
-  ) {}
+  constructor(@InjectModel(Order.name) private orderModel: Model<Order>) {}
 
-  async create(orderData: CreateOrderData, filmTitle: string, hall: number): Promise<Order> {
+  async create(
+    orderData: CreateOrderData,
+    filmTitle: string,
+    hall: number,
+  ): Promise<Order> {
     const seatKey = `${orderData.row}:${orderData.seat}`;
-    
+
     const order = new this.orderModel({
       orderId: uuidv4(),
       filmId: orderData.film,
@@ -52,7 +57,9 @@ export class OrderRepository implements IOrderRepository {
       customerEmail: orderData.customerEmail,
       customerPhone: orderData.customerPhone,
     });
-    this.logger.log(`[${this.nameService}] Добавлен заказ (билет): ${order.orderId}`);
+    this.logger.log(
+      `[${this.nameService}] Добавлен заказ (билет): ${order.orderId}`,
+    );
     return order.save();
   }
 
@@ -73,15 +80,22 @@ export class OrderRepository implements IOrderRepository {
     return this.orderModel.find({ sessionId }).exec();
   }
 
-  async updateStatus(orderId: string, status: OrderStatus): Promise<Order | null> {
-    this.logger.log(`[${this.nameService}] Изменён статус заказа: ${orderId} на ${status}`);
-    return this.orderModel.findOneAndUpdate(
-      { orderId },
-      { 
-        status, 
-        updatedAt: new Date() 
-      },
-      { new: true }
-    ).exec();
+  async updateStatus(
+    orderId: string,
+    status: OrderStatus,
+  ): Promise<Order | null> {
+    this.logger.log(
+      `[${this.nameService}] Изменён статус заказа: ${orderId} на ${status}`,
+    );
+    return this.orderModel
+      .findOneAndUpdate(
+        { orderId },
+        {
+          status,
+          updatedAt: new Date(),
+        },
+        { new: true },
+      )
+      .exec();
   }
 }

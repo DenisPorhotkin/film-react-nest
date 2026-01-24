@@ -5,7 +5,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export enum OrderStatus {
   PENDING = 'pending',
   CONFIRMED = 'confirmed',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 @Schema({ timestamps: true })
@@ -51,10 +51,10 @@ export class Order extends Document {
   seatKey: string;
 
   @ApiProperty({ enum: OrderStatus, enumName: 'OrderStatus' })
-  @Prop({ 
-    type: String, 
+  @Prop({
+    type: String,
     enum: Object.values(OrderStatus),
-    default: OrderStatus.CONFIRMED
+    default: OrderStatus.CONFIRMED,
   })
   status: OrderStatus;
 

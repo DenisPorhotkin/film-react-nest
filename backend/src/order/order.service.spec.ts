@@ -4,7 +4,11 @@ import { FilmsRepository } from '../repository/films.repository.interface';
 import { OrderRepository } from '../repository/order.repository';
 import { CreateOrderDto } from './dto/order.dto';
 import { OrderStatus } from './entities/order.entity';
-import { NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
+import {
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
 
 // Мок репозиториев
 const mockFilmsRepository = {
@@ -102,15 +106,17 @@ describe('OrderService', () => {
     it('should successfully create an order with multiple tickets', async () => {
       mockFilmsRepository.findByScheduleId.mockResolvedValue(mockFilm);
       mockFilmsRepository.reserveSeat.mockResolvedValue(true);
-      mockOrderRepository.create.mockResolvedValueOnce({
-        ...mockOrder,
-        row: 3,
-        seat: 4,
-      }).mockResolvedValueOnce({
-        ...mockOrder,
-        row: 4,
-        seat: 4,
-      });
+      mockOrderRepository.create
+        .mockResolvedValueOnce({
+          ...mockOrder,
+          row: 3,
+          seat: 4,
+        })
+        .mockResolvedValueOnce({
+          ...mockOrder,
+          row: 4,
+          seat: 4,
+        });
 
       const result = await service.create(mockCreateOrderDto);
 
@@ -333,7 +339,9 @@ describe('OrderService', () => {
       expect(result).toHaveProperty('seat', 1);
       expect(result).toHaveProperty('price', 350);
       expect(result).toHaveProperty('status', OrderStatus.CONFIRMED);
-      expect(mockOrderRepository.findById).toHaveBeenCalledWith('test-order-id');
+      expect(mockOrderRepository.findById).toHaveBeenCalledWith(
+        'test-order-id',
+      );
     });
 
     it('should throw NotFoundException when order not found', async () => {
@@ -360,7 +368,9 @@ describe('OrderService', () => {
 
       await service.remove('test-order-id');
 
-      expect(mockOrderRepository.findById).toHaveBeenCalledWith('test-order-id');
+      expect(mockOrderRepository.findById).toHaveBeenCalledWith(
+        'test-order-id',
+      );
       expect(mockOrderRepository.updateStatus).toHaveBeenCalledWith(
         'test-order-id',
         OrderStatus.CANCELLED,

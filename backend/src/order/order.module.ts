@@ -10,16 +10,15 @@ import { ThrottlerModule } from '@nestjs/throttler';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]),
-    FilmsModule, 
-    ThrottlerModule.forRoot([{
-      ttl: 60000, // 1 минута
-      limit: 100, // 100 запросов в минуту
-    }]),
+    FilmsModule,
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 1 минута
+        limit: 100, // 100 запросов в минуту
+      },
+    ]),
   ],
   controllers: [OrderController],
-  providers: [
-    OrderService,
-    OrderRepository,
-  ],
+  providers: [OrderService, OrderRepository],
 })
 export class OrderModule {}

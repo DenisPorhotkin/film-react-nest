@@ -1,20 +1,19 @@
-import { 
-  Controller, 
-  Get, 
-  Param, 
-  HttpCode, 
+import {
+  Controller,
+  Get,
+  Param,
+  HttpCode,
   HttpStatus,
   UseInterceptors,
-  ClassSerializerInterceptor
+  ClassSerializerInterceptor,
 } from '@nestjs/common';
 import { FilmsService } from './films.service';
-import { 
-  ApiTags, 
-  ApiOperation, 
-  ApiResponse, 
-  ApiParam
-} from '@nestjs/swagger';
-import { FilmResponseDto, FilmScheduleListResponseDto, FilmListResponseDto } from './dto/films.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
+import {
+  FilmResponseDto,
+  FilmScheduleListResponseDto,
+  FilmListResponseDto,
+} from './dto/films.dto';
 
 @ApiTags('films')
 @Controller('films')
@@ -23,37 +22,37 @@ export class FilmsController {
   constructor(private readonly filmsService: FilmsService) {}
 
   @Get()
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Получить список всех фильмов',
-    description: 'Возвращает список фильмов с основной информацией'
+    description: 'Возвращает список фильмов с основной информацией',
   })
-  @ApiResponse({ 
-    status: HttpStatus.OK, 
+  @ApiResponse({
+    status: HttpStatus.OK,
     description: 'Список фильмов',
-    type: FilmListResponseDto
+    type: FilmListResponseDto,
   })
   async findAll() {
     return this.filmsService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Получить информацию о фильме',
-    description: 'Возвращает подробную информацию о фильме по его ID'
+    description: 'Возвращает подробную информацию о фильме по его ID',
   })
-  @ApiParam({ 
-    name: 'id', 
+  @ApiParam({
+    name: 'id',
     description: 'ID фильма',
-    type: String 
+    type: String,
   })
-  @ApiResponse({ 
-    status: HttpStatus.OK, 
+  @ApiResponse({
+    status: HttpStatus.OK,
     description: 'Информация о фильме',
-    type: FilmResponseDto
+    type: FilmResponseDto,
   })
-  @ApiResponse({ 
-    status: HttpStatus.NOT_FOUND, 
-    description: 'Фильм не найден' 
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Фильм не найден',
   })
   async findOne(@Param('id') id: string) {
     return this.filmsService.findOne(id);
@@ -61,23 +60,23 @@ export class FilmsController {
 
   @Get(':id/schedule')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Получить расписание сеансов фильма',
-    description: 'Возвращает расписание сеансов для указанного фильма'
+    description: 'Возвращает расписание сеансов для указанного фильма',
   })
-  @ApiParam({ 
-    name: 'id', 
+  @ApiParam({
+    name: 'id',
     description: 'ID фильма',
-    type: String 
+    type: String,
   })
-  @ApiResponse({ 
-    status: HttpStatus.OK, 
+  @ApiResponse({
+    status: HttpStatus.OK,
     description: 'Расписание сеансов',
-    type: FilmScheduleListResponseDto 
+    type: FilmScheduleListResponseDto,
   })
-  @ApiResponse({ 
-    status: HttpStatus.NOT_FOUND, 
-    description: 'Фильм не найден' 
+  @ApiResponse({
+    status: HttpStatus.NOT_FOUND,
+    description: 'Фильм не найден',
   })
   async findSchedule(@Param('id') id: string) {
     return this.filmsService.findSchedule(id);
@@ -85,23 +84,23 @@ export class FilmsController {
 
   @Get(':filmId/seats/:scheduleId')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Получить список свободных мест',
-    description: 'Возвращает список свободных мест для указанного сеанса'
+    description: 'Возвращает список свободных мест для указанного сеанса',
   })
-  @ApiParam({ 
-    name: 'filmId', 
+  @ApiParam({
+    name: 'filmId',
     description: 'ID фильма',
-    type: String 
+    type: String,
   })
-  @ApiParam({ 
-    name: 'scheduleId', 
+  @ApiParam({
+    name: 'scheduleId',
     description: 'ID сеанса',
-    type: String 
+    type: String,
   })
-  @ApiResponse({ 
-    status: HttpStatus.OK, 
-    description: 'Список свободных мест'
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Список свободных мест',
   })
   async getAvailableSeats(
     @Param('filmId') filmId: string,

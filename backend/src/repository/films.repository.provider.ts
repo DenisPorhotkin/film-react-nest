@@ -8,12 +8,9 @@ import { InMemoryFilmsRepository } from './in-memory-films.repository';
 
 export const FilmsRepositoryProvider: Provider = {
   provide: FilmsRepository, // Используем абстрактный класс как токен
-  useFactory: (
-    configService: ConfigService,
-    filmModel: any,
-  ) => {
+  useFactory: (configService: ConfigService, filmModel: any) => {
     const driver = configService.get<string>('DATABASE_DRIVER', 'memory');
-    
+
     if (driver === 'mongodb') {
       return new MongoFilmsRepository(filmModel);
     } else {

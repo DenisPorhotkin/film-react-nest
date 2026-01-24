@@ -21,10 +21,10 @@ export class FileLoggerService extends ConsoleLogger implements LoggerService {
   private writeToFile(level: string, message: string, context?: string): void {
     const timestamp = new Date().toISOString();
     const logMessage = `${timestamp} [${level}] ${context ? `[${context}]` : ''} ${message}\n`;
-    
+
     const today = new Date().toISOString().split('T')[0];
     const logFile = path.join(this.logDir, `${today}.log`);
-    
+
     try {
       fs.appendFileSync(logFile, logMessage, { encoding: 'utf8' });
     } catch (error) {
@@ -40,7 +40,11 @@ export class FileLoggerService extends ConsoleLogger implements LoggerService {
 
   error(message: string, trace?: string, context?: string) {
     super.error(message, trace, context);
-    this.writeToFile('ERROR', `${message}${trace ? '\n' + trace : ''}`, context);
+    this.writeToFile(
+      'ERROR',
+      `${message}${trace ? '\n' + trace : ''}`,
+      context,
+    );
   }
 
   warn(message: string, context?: string) {

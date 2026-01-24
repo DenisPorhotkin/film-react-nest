@@ -18,7 +18,7 @@ import configuration from './config/configuration';
       cache: true,
       envFilePath: '.env',
     }),
-    
+
     // Подключение к MongoDB (только если драйвер = mongodb)
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -27,7 +27,7 @@ import configuration from './config/configuration';
         if (driver !== 'mongodb') {
           return null; // Не подключаем Mongoose при использовании in-memory
         }
-        
+
         const databaseUrl = configService.get<string>('database.url');
         return {
           uri: databaseUrl,
@@ -39,33 +39,37 @@ import configuration from './config/configuration';
       },
       inject: [ConfigService],
     }),
-    
+
     // Обслуживание статических файлов
     ServeStaticModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const contentPath = configService.get<string>('static.contentPath');
         const serveRoot = configService.get<string>('static.serveRoot');
-        
-        return [{
-          rootPath: path.join(process.cwd(), contentPath),
-          serveRoot: serveRoot,
-          exclude: ['/api/*'],
-        }];
+
+        return [
+          {
+            rootPath: path.join(process.cwd(), contentPath),
+            serveRoot: serveRoot,
+            exclude: ['/api/*'],
+          },
+        ];
       },
       inject: [ConfigService],
     }),
-    
-    // Ограничения запросов для безопасности 
+
+    // Ограничения запросов для безопасности
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => [{
-        ttl: configService.get<number>('security.rateLimitTtl'),
-        limit: configService.get<number>('security.rateLimit'),
-      }],
+      useFactory: (configService: ConfigService) => [
+        {
+          ttl: configService.get<number>('security.rateLimitTtl'),
+          limit: configService.get<number>('security.rateLimit'),
+        },
+      ],
       inject: [ConfigService],
     }),
-    
+
     // Модули приложения
     FilmsModule,
     OrderModule,
@@ -73,4 +77,4 @@ import configuration from './config/configuration';
   controllers: [],
   providers: [],
 })
-export class AppModule {};
+export class AppModule {}

@@ -13,12 +13,12 @@ async function bootstrap() {
     logger: logger,
   });
   const configService = app.get(ConfigService);
-  
+
   // Получаем конфигурацию
   const port = configService.get<number>('server.port');
   const globalPrefix = configService.get<string>('server.globalPrefix');
   const corsOrigin = configService.get<string>('security.corsOrigin');
-  
+
   // Безопасность - Helmet с кастомными настройками для статических файлов
   app.use((req, res, next) => {
     if (req.path.startsWith('/content/')) {
@@ -29,25 +29,27 @@ async function bootstrap() {
           directives: {
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
-            imgSrc: ["'self'", "data:", corsOrigin, 'http://localhost:3000'],
+            imgSrc: ["'self'", 'data:', corsOrigin, 'http://localhost:3000'],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
           },
         },
       })(req, res, next);
     }
   });
-  
+
   // Сжатие ответов
   app.use(compression());
-  
+
   // Валидация запросов
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-    transformOptions: { enableImplicitConversion: true },
-  }));
-  
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
+
   // CORS
   app.enableCors({
     origin: corsOrigin,
@@ -55,10 +57,10 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   });
-  
+
   // Глобальный префикс API
   app.setGlobalPrefix(globalPrefix);
-  
+
   // Swagger документация
   const swaggerConfig = new DocumentBuilder()
     .setTitle(configService.get<string>('swagger.title'))
@@ -67,10 +69,10 @@ async function bootstrap() {
     .addTag('films', 'Операции с фильмами')
     .addTag('orders', 'Операции с заказами')
     .build();
-  
+
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup(configService.get<string>('swagger.path'), app, document);
-  
+
   // Запуск сервера
   await app.listen(port);
   logger.log(`Приложение запущено на http://localhost:${port}/${globalPrefix}`);

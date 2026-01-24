@@ -1,26 +1,44 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNumber, IsString, IsUUID, IsDateString, IsPositive, Min, Max } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsString,
+  IsUUID,
+  IsDateString,
+  IsPositive,
+  Min,
+} from 'class-validator';
 
 // Только для расписания
 export class ScheduleDto {
-  @ApiProperty({ description: 'ID сеанса', example: '793009d6-030c-4dd4-8d13-9ba500724b38' })
+  @ApiProperty({
+    description: 'ID сеанса',
+    example: '793009d6-030c-4dd4-8d13-9ba500724b38',
+  })
   @IsUUID()
   id: string;
 
-  @ApiProperty({ description: 'Дата и время сеанса', example: '2024-06-28T10:00:53+03:00' })
+  @ApiProperty({
+    description: 'Дата и время сеанса',
+    example: '2024-06-28T10:00:53+03:00',
+  })
   @IsDateString()
   daytime: string;
 
-  @ApiProperty({ description: 'Номер зала', example: "0", type: String })
-  @IsString() 
-  hall: string; 
+  @ApiProperty({ description: 'Номер зала', example: '0', type: String })
+  @IsString()
+  hall: string;
 
   @ApiProperty({ description: 'Количество рядов', example: 5, minimum: 1 })
   @IsNumber()
   @IsPositive()
   rows: number;
 
-  @ApiProperty({ description: 'Количество мест в ряду', example: 10, minimum: 1 })
+  @ApiProperty({
+    description: 'Количество мест в ряду',
+    example: 10,
+    minimum: 1,
+  })
   @IsNumber()
   @IsPositive()
   seats: number;
@@ -30,10 +48,10 @@ export class ScheduleDto {
   @Min(0)
   price: number;
 
-  @ApiProperty({ 
-    description: 'Занятые места в формате "ряд:место"', 
+  @ApiProperty({
+    description: 'Занятые места в формате "ряд:место"',
     example: ['3:3', '1:4'],
-    type: [String]
+    type: [String],
   })
   @IsArray()
   @IsString({ each: true })
