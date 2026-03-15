@@ -11,7 +11,7 @@ import {
   OrderResponseDto,
 } from './dto/order.dto';
 import { FilmsRepository } from '../repository/films.repository.interface';
-import { OrderRepository } from '../repository/order.repository';
+import { OrderRepository } from '../repository/order.repository.interface';
 import { OrderStatus } from './entities/order.entity';
 import { FileLoggerService } from '../common/logger/file-logger.service';
 

@@ -12,8 +12,12 @@ export default () => ({
 
   // Конфигурация базы данных
   database: {
-    driver: process.env.DATABASE_DRIVER || 'mongodb',
-    url: process.env.DATABASE_URL || 'mongodb://localhost:27017/prac',
+    driver: process.env.DATABASE_DRIVER || 'postgres',
+    host: process.env.DATABASE_HOST || 'localhost',
+    port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+    username: process.env.DATABASE_USERNAME || 'prac',
+    password: process.env.DATABASE_PASSWORD || '',
+    database: process.env.DATABASE_NAME || 'prac',
   },
 
   // Конфигурация безопасности

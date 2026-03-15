@@ -1,24 +1,28 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { OrderService } from './order.service';
 import { OrderController } from './order.controller';
-import { Order, OrderSchema } from './entities/order.entity';
-import { OrderRepository } from '../repository/order.repository';
+import { OrderEntity } from '../entities/order.entity';
 import { FilmsModule } from '../films/films.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { OrderRepository } from '../repository/order.repository.interface';
+import { TypeOrmOrderRepository } from '../repository/typeorm-order.repository';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Order.name, schema: OrderSchema }]),
+    TypeOrmModule.forFeature([OrderEntity]),
     FilmsModule,
     ThrottlerModule.forRoot([
       {
-        ttl: 60000, // 1 минута
-        limit: 100, // 100 запросов в минуту
+        ttl: 60000,
+        limit: 100,
       },
     ]),
   ],
   controllers: [OrderController],
-  providers: [OrderService, OrderRepository],
+  providers: [
+    OrderService,
+    { provide: OrderRepository, useClass: TypeOrmOrderRepository }, // регистрируем реализацию под токеном абстрактного класса
+  ],
 })
 export class OrderModule {}
