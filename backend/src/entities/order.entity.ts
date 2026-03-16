@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { OrderStatus } from '../order/order-status.enum';
 
 @Entity('orders')
 export class OrderEntity {
@@ -41,8 +42,8 @@ export class OrderEntity {
   @Column({ name: 'seatKey' })
   seatKey: string;
 
-  @Column({ default: 'confirmed' })
-  status: string;
+  @Column({ default: OrderStatus.CONFIRMED })
+  status: OrderStatus;
 
   @Column({ name: 'customerEmail', nullable: true })
   customerEmail?: string;

@@ -1,4 +1,5 @@
-import { Order, OrderStatus } from '../order/entities/order.entity';
+import { OrderStatus } from '../order/order-status.enum';
+import { OrderEntity } from '../entities/order.entity';
 
 export interface CreateOrderData {
   film: string;
@@ -16,18 +17,18 @@ export abstract class OrderRepository {
     orderData: CreateOrderData,
     filmTitle: string,
     hall: number,
-  ): Promise<Order>;
+  ): Promise<OrderEntity>;
 
   abstract cancelOrder(orderId: string): Promise<void>;
 
-  abstract findAll(): Promise<Order[]>;
+  abstract findAll(): Promise<OrderEntity[]>;
 
-  abstract findById(orderId: string): Promise<Order | null>;
+  abstract findById(orderId: string): Promise<OrderEntity | null>;
 
-  abstract findBySession(sessionId: string): Promise<Order[]>;
+  abstract findBySession(sessionId: string): Promise<OrderEntity[]>;
 
   abstract updateStatus(
     orderId: string,
     status: OrderStatus,
-  ): Promise<Order | null>;
+  ): Promise<OrderEntity | null>;
 }

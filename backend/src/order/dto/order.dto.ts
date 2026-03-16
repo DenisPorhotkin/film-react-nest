@@ -13,7 +13,7 @@ import {
   ArrayMinSize,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { OrderStatus } from '../entities/order.entity';
+import { OrderStatus } from '../order-status.enum';
 
 // DTO для отдельного билета
 export class TicketDto {

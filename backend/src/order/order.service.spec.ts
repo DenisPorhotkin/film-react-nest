@@ -3,7 +3,7 @@ import { OrderService } from './order.service';
 import { FilmsRepository } from '../repository/films.repository.interface';
 import { OrderRepository } from '../repository/order.repository.interface';
 import { CreateOrderDto } from './dto/order.dto';
-import { OrderStatus } from './entities/order.entity';
+import { OrderStatus } from './order-status.enum';
 import {
   NotFoundException,
   BadRequestException,
