@@ -1,4 +1,12 @@
-import { Schedule } from '../entities/film.entity';
+export interface ScheduleData {
+  id: string;
+  daytime: Date;
+  hall: number;
+  rows: number;
+  seats: number;
+  price: number;
+  taken: string[];
+}
 
 export interface FilmData {
   id: string;
@@ -10,7 +18,7 @@ export interface FilmData {
   title: string;
   about: string;
   description: string;
-  schedule: Schedule[];
+  schedule: ScheduleData[];
   createdAt?: Date;
   updatedAt?: Date;
 }
