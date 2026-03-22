@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: afisha_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-prac}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-prac}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - afisha_network
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: afisha_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL:-admin@example.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - afisha_network
+    # Раскомментируйте для локального доступа
+    # ports:
+    #   - "8080:80"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: afisha_backend
+    environment:
+      NODE_ENV: production
+      LOGGER_TYPE: ${LOGGER_TYPE:-dev}
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: ${DATABASE_USERNAME:-prac}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-password}
+      DATABASE_NAME: ${DATABASE_NAME:-prac}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost}
+    depends_on:
+      - postgres
+    networks:
+      - afisha_network
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    container_name: afisha_nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - afisha_network
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  afisha_network:
+    driver: bridge
