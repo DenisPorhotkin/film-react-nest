@@ -16,9 +16,7 @@ describe('FilmsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [FilmsController],
-      providers: [
-        { provide: FilmsService, useValue: mockFilmsService },
-      ],
+      providers: [{ provide: FilmsService, useValue: mockFilmsService }],
     }).compile();
 
     controller = module.get<FilmsController>(FilmsController);

@@ -3,12 +3,10 @@ import { TskvLogger } from './tskv.logger';
 describe('TskvLogger', () => {
   let logger: TskvLogger;
   let stdoutSpy: jest.SpyInstance;
-  let stderrSpy: jest.SpyInstance;
 
   beforeEach(() => {
     logger = new TskvLogger();
     stdoutSpy = jest.spyOn(process.stdout, 'write').mockImplementation();
-    stderrSpy = jest.spyOn(process.stderr, 'write').mockImplementation();
   });
 
   afterEach(() => {

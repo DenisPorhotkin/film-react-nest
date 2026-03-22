@@ -32,6 +32,8 @@ export class TskvLogger implements LoggerService {
   }
 
   verbose(message: any, ...optionalParams: any[]) {
-    process.stdout.write(this.formatMessage('verbose', message, optionalParams));
+    process.stdout.write(
+      this.formatMessage('verbose', message, optionalParams),
+    );
   }
 }

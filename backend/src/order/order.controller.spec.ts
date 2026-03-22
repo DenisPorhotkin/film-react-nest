@@ -17,13 +17,9 @@ describe('OrderController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }]),
-      ],
+      imports: [ThrottlerModule.forRoot([{ ttl: 60000, limit: 10 }])],
       controllers: [OrderController],
-      providers: [
-        { provide: OrderService, useValue: mockOrderService },
-      ],
+      providers: [{ provide: OrderService, useValue: mockOrderService }],
     }).compile();
 
     controller = module.get<OrderController>(OrderController);

@@ -43,7 +43,7 @@ async function bootstrap() {
           directives: {
             defaultSrc: ["'self'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
-            imgSrc: ["'self'", 'data:', corsOrigin, 'http://localhost:3000'],
+            imgSrc: ["'self'", 'data:', corsOrigin, 'http://localhost'],
             scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
           },
         },

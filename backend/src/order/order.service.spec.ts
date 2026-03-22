@@ -223,7 +223,9 @@ describe('OrderService', () => {
         4,
       );
       // Проверяем, что cancelOrder был вызван для первого заказа
-      expect(mockOrderRepository.cancelOrder).toHaveBeenCalledWith('test-order-id');
+      expect(mockOrderRepository.cancelOrder).toHaveBeenCalledWith(
+        'test-order-id',
+      );
     });
 
     it('should handle single ticket order', async () => {
