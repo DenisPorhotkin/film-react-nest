@@ -107,16 +107,8 @@ describe('OrderService', () => {
       mockFilmsRepository.findByScheduleId.mockResolvedValue(mockFilm);
       mockFilmsRepository.reserveSeat.mockResolvedValue(true);
       mockOrderRepository.create
-        .mockResolvedValueOnce({
-          ...mockOrder,
-          row: 3,
-          seat: 4,
-        })
-        .mockResolvedValueOnce({
-          ...mockOrder,
-          row: 4,
-          seat: 4,
-        });
+        .mockResolvedValueOnce({ ...mockOrder, row: 3, seat: 4 })
+        .mockResolvedValueOnce({ ...mockOrder, row: 4, seat: 4 });
 
       const result = await service.create(mockCreateOrderDto);
 
@@ -153,7 +145,7 @@ describe('OrderService', () => {
         tickets: [
           {
             ...mockCreateOrderDto.tickets[0],
-            daytime: '2024-07-01T18:00:53+03:00', // Другая дата
+            daytime: '2024-07-01T18:00:53+03:00',
           },
         ],
       };
@@ -171,7 +163,7 @@ describe('OrderService', () => {
         tickets: [
           {
             ...mockCreateOrderDto.tickets[0],
-            price: 400, // Другая цена
+            price: 400,
           },
         ],
       };
@@ -189,7 +181,7 @@ describe('OrderService', () => {
         tickets: [
           {
             ...mockCreateOrderDto.tickets[0],
-            row: 10, // Неверный ряд
+            row: 10,
           },
         ],
       };
@@ -203,7 +195,7 @@ describe('OrderService', () => {
 
     it('should throw ConflictException when seat is already taken', async () => {
       mockFilmsRepository.findByScheduleId.mockResolvedValue(mockFilm);
-      mockFilmsRepository.reserveSeat.mockResolvedValue(false); // Место занято
+      mockFilmsRepository.reserveSeat.mockResolvedValue(false);
 
       await expect(service.create(mockCreateOrderDto)).rejects.toThrow(
         ConflictException,
@@ -212,10 +204,12 @@ describe('OrderService', () => {
 
     it('should rollback all reservations when one fails', async () => {
       mockFilmsRepository.findByScheduleId.mockResolvedValue(mockFilm);
-      mockFilmsRepository.reserveSeat
-        .mockResolvedValueOnce(true) // Первое место успешно
-        .mockResolvedValueOnce(false); // Второе место занято
-      mockFilmsRepository.releaseSeat.mockResolvedValue(true);
+      // Первое место успешно
+      mockFilmsRepository.reserveSeat.mockResolvedValueOnce(true);
+      // Второе место занято
+      mockFilmsRepository.reserveSeat.mockResolvedValueOnce(false);
+      // Мок для создания заказа первого билета
+      mockOrderRepository.create.mockResolvedValue(mockOrder);
 
       await expect(service.create(mockCreateOrderDto)).rejects.toThrow(
         ConflictException,
@@ -228,7 +222,8 @@ describe('OrderService', () => {
         3,
         4,
       );
-      expect(mockOrderRepository.cancelOrder).toHaveBeenCalled();
+      // Проверяем, что cancelOrder был вызван для первого заказа
+      expect(mockOrderRepository.cancelOrder).toHaveBeenCalledWith('test-order-id');
     });
 
     it('should handle single ticket order', async () => {
